@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Send, Copy, RefreshCw, MessageSquare, Zap, Clock, CheckCircle2, AlertTriangle, Calendar, ChevronRight } from 'lucide-react';
+import { Sparkles, Send, Copy, RefreshCw, MessageSquare, Zap, Clock, CheckCircle2, AlertTriangle, Calendar, ChevronRight, X, Edit3, Check } from 'lucide-react';
 
 const AITools = () => {
     // TABS: 'interactive' (Manual tools), 'scheduled' (Auto-runs)
@@ -15,10 +15,12 @@ const AITools = () => {
 
     // Scheduled State (Mock Data)
     const [scheduledItems, setScheduledItems] = useState([
-        { id: 1, project: 'Maplewood Estate - Lot 4', type: 'Weekly Update', status: 'Pending Review', due: 'Today, 5:00 PM', urgency: 'high' },
-        { id: 2, project: 'Riverside B', type: 'Weekly Update', status: 'Pending Review', due: 'Today, 5:00 PM', urgency: 'high' },
-        { id: 3, project: 'Oakridge Ph2', type: 'CSR Report', status: 'Draft Ready', due: 'Tomorrow', urgency: 'medium' },
+        { id: 1, project: 'Maplewood Estate - Lot 4', type: 'Weekly Update', status: 'Pending Review', due: 'Today, 5:00 PM', urgency: 'high', content: "Subject: Weekly Update\n\nHi [Client],\n\nThis week we completed the framing stage. Inspections are set for tomorrow. Everything stays on track!" },
+        { id: 2, project: 'Riverside B', type: 'Weekly Update', status: 'Pending Review', due: 'Today, 5:00 PM', urgency: 'high', content: "Subject: Weekly Update\n\nHi [Client],\n\nFoundation work is proceeding. Concrete pour is scheduled for Thursday pending weather." },
+        { id: 3, project: 'Oakridge Ph2', type: 'CSR Report', status: 'Draft Ready', due: 'Tomorrow', urgency: 'medium', content: "Community Impact Report:\n\n- Zero noise complaints\n- 40% waste diversion achieved\n- Newsletter distributed to HOA." },
     ]);
+
+    const [selectedDraft, setSelectedDraft] = useState(null);
 
     const streamText = (text) => {
         let i = 0;
@@ -47,11 +49,17 @@ const AITools = () => {
 
     const reset = () => { setStep(0); setGeneratedContent(''); };
 
+    // Helper to approve draft
+    const approveDraft = (id) => {
+        setScheduledItems(prev => prev.filter(i => i.id !== id));
+        setSelectedDraft(null);
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-6xl mx-auto h-[calc(100vh-140px)] flex flex-col"
+            className="max-w-6xl mx-auto h-[calc(100vh-140px)] flex flex-col relative"
         >
             <div className="mb-6 flex justify-between items-center">
                 <div>
@@ -71,7 +79,7 @@ const AITools = () => {
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${mainView === 'scheduled' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/20' : 'text-slate-400 hover:text-white'}`}
                     >
                         <Calendar size={16} /> Scheduled Runs
-                        <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">3</span>
+                        <span className="bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">{scheduledItems.length}</span>
                     </button>
                     <button
                         onClick={() => setMainView('interactive')}
@@ -83,7 +91,7 @@ const AITools = () => {
             </div>
 
             {mainView === 'scheduled' ? (
-                <ScheduledView items={scheduledItems} setItems={setScheduledItems} />
+                <ScheduledView items={scheduledItems} onReview={(item) => setSelectedDraft(item)} />
             ) : (
                 <InteractiveView
                     activeTool={activeTool}
@@ -97,11 +105,53 @@ const AITools = () => {
                     generatedContent={generatedContent}
                 />
             )}
+
+            {/* Review Modal */}
+            <AnimatePresence>
+                {selectedDraft && (
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        onClick={() => setSelectedDraft(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+                            className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-800/50">
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Review Draft</h3>
+                                    <p className="text-sm text-slate-400">{selectedDraft.type} for {selectedDraft.project}</p>
+                                </div>
+                                <button onClick={() => setSelectedDraft(null)}><X size={20} className="text-slate-400 hover:text-white" /></button>
+                            </div>
+
+                            <div className="p-6 bg-slate-950/50 font-mono text-sm text-slate-300 min-h-[200px] whitespace-pre-wrap">
+                                {selectedDraft.content}
+                            </div>
+
+                            <div className="p-6 border-t border-white/10 flex justify-end gap-3 bg-slate-800/50">
+                                <button className="px-4 py-2 text-slate-400 hover:text-white flex items-center gap-2">
+                                    <Edit3 size={16} /> Edit
+                                </button>
+                                <button
+                                    onClick={() => approveDraft(selectedDraft.id)}
+                                    className="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-cyan-900/20"
+                                >
+                                    <Check size={18} /> Approve & Send
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
         </motion.div>
     );
 };
 
-const ScheduledView = ({ items, setItems }) => (
+const ScheduledView = ({ items, onReview }) => (
     <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -113,11 +163,12 @@ const ScheduledView = ({ items, setItems }) => (
                     <h2 className="text-xl font-bold text-white">Pending Approvals</h2>
                     <p className="text-slate-400 text-sm">Automated drafts generated this week requiring your review.</p>
                 </div>
-                <button className="text-sm text-cyan-400 hover:text-cyan-300">View History</button>
             </div>
 
             <div className="space-y-4">
-                {items.map((item) => (
+                {items.length === 0 ? (
+                    <div className="text-center py-10 text-slate-500">No pending items. You're all caught up!</div>
+                ) : items.map((item) => (
                     <div key={item.id} className="bg-white/5 border border-white/5 rounded-xl p-5 hover:bg-white/10 transition-colors flex items-center justify-between group">
                         <div className="flex items-center gap-4">
                             <div className={`w-12 h-12 rounded-full flex items-center justify-center ${item.type === 'Weekly Update' ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'}`}>
@@ -137,7 +188,10 @@ const ScheduledView = ({ items, setItems }) => (
                             <span className="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full">
                                 {item.status}
                             </span>
-                            <button className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            <button
+                                onClick={() => onReview(item)}
+                                className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                            >
                                 Review Draft
                             </button>
                         </div>
@@ -145,6 +199,7 @@ const ScheduledView = ({ items, setItems }) => (
                 ))}
             </div>
 
+            {/* Footer with timer included in original component, kept here for consistency if needed or removed if too cluttered */}
             <div className="mt-12 p-6 bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl border border-white/5 flex items-center justify-between">
                 <div>
                     <h3 className="font-bold text-white">Next Auto-Run</h3>
@@ -168,7 +223,7 @@ const InteractiveView = ({ activeTool, setActiveTool, step, prompt, setPrompt, h
             <ToolButton id="csr" label="CSR Report" icon={<MessageSquare size={18} />} active={activeTool} onClick={() => { setActiveTool('csr'); reset(); }} />
         </div>
 
-        {/* Content - Same as before, simplified for this file update */}
+        {/* Content */}
         <div className="flex-1 p-8 relative flex flex-col">
             {step === 0 && (
                 <div className="max-w-xl">
