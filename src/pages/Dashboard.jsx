@@ -87,24 +87,35 @@ const Dashboard = () => {
     );
 };
 
-const KPICard = ({ title, value, trend, icon, color }) => (
-    <motion.div
-        whileHover={{ y: -5 }}
-        className="glass-card p-6 relative overflow-hidden group"
-    >
-        <div className={`absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity bg-${color}-500/10 rounded-bl-2xl`}>
-            {icon}
-        </div>
-        <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">{title}</p>
-        <div className="mt-4 flex items-end justify-between">
-            <h2 className="text-3xl font-bold text-white">{value}</h2>
-            <span className={`text-sm font-medium ${trend.includes('-') || trend === 'Urgent' ? 'text-red-400' : 'text-green-400'} flex items-center`}>
-                {trend.includes('+') && <ArrowUpRight size={14} className="mr-1" />}
-                {trend}
-            </span>
-        </div>
-    </motion.div>
-);
+const KPICard = ({ title, value, trend, icon, color }) => {
+    const colorMap = {
+        green: 'bg-green-500/10 text-green-400',
+        blue: 'bg-blue-500/10 text-blue-400',
+        purple: 'bg-purple-500/10 text-purple-400',
+        red: 'bg-red-500/10 text-red-400',
+    };
+
+    const trendColor = trend.includes('-') || trend === 'Urgent' ? 'text-red-400' : 'text-green-400';
+
+    return (
+        <motion.div
+            whileHover={{ y: -5 }}
+            className="glass-card p-6 relative overflow-hidden group"
+        >
+            <div className={`absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity rounded-bl-2xl ${colorMap[color]}`}>
+                {icon}
+            </div>
+            <p className="text-slate-400 text-sm font-medium uppercase tracking-wider">{title}</p>
+            <div className="mt-4 flex items-end justify-between">
+                <h2 className="text-3xl font-bold text-white">{value}</h2>
+                <span className={`text-sm font-medium ${trendColor} flex items-center`}>
+                    {trend.includes('+') && <ArrowUpRight size={14} className="mr-1" />}
+                    {trend}
+                </span>
+            </div>
+        </motion.div>
+    );
+};
 
 const LogItem = ({ time, text, type }) => {
     const colors = {
