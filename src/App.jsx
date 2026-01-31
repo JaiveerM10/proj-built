@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import AITools from './pages/AITools';
+import Insights from './pages/Insights';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -91,6 +92,7 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/ai-tools" element={<AITools />} />
+                <Route path="/insights" element={<Insights />} />
                 <Route path="*" element={<div className="p-10 text-center text-slate-500">Module under construction</div>} />
               </Routes>
             </AnimatePresence>
