@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, Bot, LineChart, Settings, Menu, X, Bell } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Bot, LineChart, Settings, Menu, X, Bell, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Pages - We'll define them in-line for simplicity if small, or imports
@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
 import AITools from './pages/AITools';
 import Insights from './pages/Insights';
+import CSR from './pages/CSR';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -51,6 +52,7 @@ function App() {
             <NavItem to="/projects" icon={<FolderKanban size={20} />} label="Projects" isOpen={sidebarOpen} />
             <NavItem to="/ai-tools" icon={<Bot size={20} />} label="AI Hub" isOpen={sidebarOpen} />
             <NavItem to="/insights" icon={<LineChart size={20} />} label="Analytics" isOpen={sidebarOpen} />
+            <NavItem to="/csr" icon={<Users size={20} />} label="Community" isOpen={sidebarOpen} />
           </nav>
 
           <div className="p-4 border-t border-white/5">
@@ -93,6 +95,7 @@ function App() {
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/ai-tools" element={<AITools />} />
                 <Route path="/insights" element={<Insights />} />
+                <Route path="/csr" element={<CSR />} />
                 <Route path="*" element={<div className="p-10 text-center text-slate-500">Module under construction</div>} />
               </Routes>
             </AnimatePresence>
