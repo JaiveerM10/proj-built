@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Zap, AlertCircle, Clock, CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 
 const data = [
     { name: 'Mon', satisfaction: 4.2 },
@@ -14,6 +16,9 @@ const data = [
 ];
 
 const Dashboard = () => {
+    const navigate = useNavigate();
+    const { activityLog } = useApp();
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -29,7 +34,7 @@ const Dashboard = () => {
                     <p className="text-slate-400 mt-2">Welcome back, Alex. System operating at 98% efficiency.</p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="btn-primary flex items-center gap-2">
+                    <button onClick={() => navigate('/ai-tools')} className="btn-primary flex items-center gap-2">
                         <Zap size={18} /> Quick Action
                     </button>
                 </div>
@@ -37,15 +42,15 @@ const Dashboard = () => {
 
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <KPICard title="Client Sentiment" value="98.5%" trend="+2.4%" icon={<CheckCircle2 className="text-green-500" />} color="green" />
-                <KPICard title="Active Permits" value="12" trend="-1" icon={<FileTextIcon className="text-blue-500" />} color="blue" />
-                <KPICard title="AI Time Saved" value="48h" trend="+12h" icon={<Clock className="text-purple-500" />} color="purple" />
-                <KPICard title="Pending Issues" value="3" trend="Urgent" icon={<AlertCircle className="text-red-500" />} color="red" />
+                <KPICard title="Client Sentiment" value="98.5%" trend="+2.4%" icon={<CheckCircle2 className="text-green-500" />} color="green" onClick={() => navigate('/insights')} />
+                <KPICard title="Active Permits" value="12" trend="-1" icon={<FileTextIcon className="text-blue-500" />} color="blue" onClick={() => navigate('/projects')} />
+                <KPICard title="AI Time Saved" value="48h" trend="+12h" icon={<Clock className="text-purple-500" />} color="purple" onClick={() => navigate('/ai-tools')} />
+                <KPICard title="Pending Issues" value="3" trend="Urgent" icon={<AlertCircle className="text-red-500" />} color="red" onClick={() => navigate('/insights')} />
             </div>
 
             {/* Main Chart Section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 glass-card p-6 h-[400px] flex flex-col">
+                <div className="lg:col-span-2 glass-card p-6 h-[400px] flex flex-col cursor-pointer hover:border-white/20 transition-colors" onClick={() => navigate('/insights')}>
                     <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
                         <Zap size={20} className="text-yellow-400" /> Live Satisfaction Trends
                     </h3>
@@ -71,15 +76,17 @@ const Dashboard = () => {
                 </div>
 
                 {/* AI Feed */}
-                <div className="glass-card p-6 h-[400px] flex flex-col relative overflow-hidden">
+                <div className="glass-card p-6 h-[400px] flex flex-col relative overflow-hidden cursor-pointer hover:border-white/20 transition-colors" onClick={() => navigate('/ai-tools')}>
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500 animate-pulse"></div>
                     <h3 className="text-xl font-semibold mb-4 text-cyan-400">AI Activity Log</h3>
                     <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scroll">
-                        <LogItem time="10:42 AM" text="Generated weekly update for 'Riverside B'" type="success" />
-                        <LogItem time="10:30 AM" text="Detected negative sentiment in survey #442" type="warning" />
-                        <LogItem time="09:15 AM" text="Summarized Change Order #29 impacts" type="info" />
-                        <LogItem time="09:00 AM" text="System scheduled 3 neighbor notices" type="info" />
-                        <LogItem time="Yesterday" text="Monthly report compiled successfully" type="success" />
+                        {activityLog.length === 0 ? (
+                            <p className="text-slate-500 text-sm text-center mt-10">No recent activity.</p>
+                        ) : (
+                            activityLog.map((log) => (
+                                <LogItem key={log.id} time={log.time} text={log.text} type={log.type} />
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
@@ -87,7 +94,7 @@ const Dashboard = () => {
     );
 };
 
-const KPICard = ({ title, value, trend, icon, color }) => {
+const KPICard = ({ title, value, trend, icon, color, onClick }) => {
     const colorMap = {
         green: 'bg-green-500/10 text-green-400',
         blue: 'bg-blue-500/10 text-blue-400',
@@ -100,7 +107,8 @@ const KPICard = ({ title, value, trend, icon, color }) => {
     return (
         <motion.div
             whileHover={{ y: -5 }}
-            className="glass-card p-6 relative overflow-hidden group"
+            onClick={onClick}
+            className="glass-card p-6 relative overflow-hidden group cursor-pointer hover:ring-1 hover:ring-white/20 transition-all"
         >
             <div className={`absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity rounded-bl-2xl ${colorMap[color]}`}>
                 {icon}

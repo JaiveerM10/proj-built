@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Leaf, Award, Recycle, Users, Activity, Sun, Battery, Droplets, ArrowUpRight } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { useNavigate } from 'react-router-dom';
 
 const energyData = [
     { name: 'Jan', kwh: 1200, saved: 450 },
@@ -18,6 +19,8 @@ const wasteData = [
 ];
 
 const CSR = () => {
+    const navigate = useNavigate();
+
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
             <div className="flex justify-between items-end">
@@ -26,10 +29,16 @@ const CSR = () => {
                     <p className="text-slate-400">Tracking our environmental footprint and community engagement.</p>
                 </div>
                 <div className="flex gap-2">
-                    <button className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                    <button
+                        onClick={() => navigate('/insights')}
+                        className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                    >
                         <Award size={18} /> View Certifications
                     </button>
-                    <button className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg transition-colors">
+                    <button
+                        onClick={() => alert('Download started...')}
+                        className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg transition-colors"
+                    >
                         Export Report
                     </button>
                 </div>
