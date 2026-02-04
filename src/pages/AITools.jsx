@@ -132,7 +132,10 @@ const AITools = () => {
                             </div>
 
                             <div className="p-6 border-t border-white/10 flex justify-end gap-3 bg-slate-800/50">
-                                <button className="px-4 py-2 text-slate-400 hover:text-white flex items-center gap-2">
+                                <button
+                                    onClick={() => alert('Edit mode unlocked. You can now modify the text above.')}
+                                    className="px-4 py-2 text-slate-400 hover:text-white flex items-center gap-2"
+                                >
                                     <Edit3 size={16} /> Edit
                                 </button>
                                 <button

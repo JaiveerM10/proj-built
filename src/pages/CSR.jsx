@@ -36,7 +36,12 @@ const CSR = () => {
                         <Award size={18} /> View Certifications
                     </button>
                     <button
-                        onClick={() => alert('Download started...')}
+                        onClick={() => {
+                            const btn = document.activeElement;
+                            const originalText = btn.innerText;
+                            btn.innerText = 'Downloading...';
+                            setTimeout(() => { alert('CSR_Report_Q3.pdf downloaded successfully.'); btn.innerText = originalText; }, 1000);
+                        }}
                         className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-4 py-2 rounded-lg transition-colors"
                     >
                         Export Report

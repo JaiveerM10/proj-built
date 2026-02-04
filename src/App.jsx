@@ -80,11 +80,11 @@ function App() {
             </div>
 
             <div className="flex items-center gap-6">
-              <div className="relative cursor-pointer hover:text-cyan-400 transition-colors">
+              <div className="relative cursor-pointer hover:text-cyan-400 transition-colors" onClick={() => alert('No new notifications')}>
                 <Bell size={20} />
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-black"></span>
               </div>
-              <Settings size={20} className="cursor-pointer hover:text-cyan-400 transition-colors" />
+              <Settings size={20} className="cursor-pointer hover:text-cyan-400 transition-colors" onClick={() => alert('Settings module is locked in this demo.')} />
             </div>
           </header>
 

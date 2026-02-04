@@ -50,7 +50,10 @@ const Insights = () => {
                         <option value="30d">Last 30 Days</option>
                         <option value="90d">Last Quarter</option>
                     </select>
-                    <button className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-white transition-colors">
+                    <button
+                        onClick={() => alert('Analytics Report downloaded.')}
+                        className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-2 text-white transition-colors"
+                    >
                         <Download size={20} />
                     </button>
                 </div>
@@ -148,7 +151,7 @@ const Insights = () => {
                     <h3 className="text-xl font-bold text-white mb-4">Live Feedback Stream</h3>
                     <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scroll">
                         {[1, 2, 3, 4, 5].map((i) => (
-                            <div key={i} className="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                            <div key={i} onClick={() => alert('Feedback details: Client was impressed with transparency.')} className="bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
                                 <div className="flex justify-between items-start mb-2">
                                     <div className="flex items-center gap-2">
                                         <div className="w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-[10px] font-bold">JD</div>
