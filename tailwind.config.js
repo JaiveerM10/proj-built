@@ -11,8 +11,9 @@ export default {
                 'bg-panel': 'rgba(17, 24, 39, 0.6)',
             },
             fontFamily: {
-                sans: ['Outfit', 'sans-serif'],
-                display: ['Space Grotesk', 'sans-serif'],
+                sans: ['Inter', 'sans-serif'],
+                display: ['Inter', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace'],
             }
         },
     },
