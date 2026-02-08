@@ -17,6 +17,10 @@ export const AppProvider = ({ children }) => {
         { id: 3, time: '09:15 AM', text: "Summarized Change Order #29 impacts", type: 'info' },
     ]);
 
+    const addProject = (project) => {
+        setProjects(prev => [project, ...prev]);
+    };
+
     const addActivity = (text, type = 'info') => {
         const newLog = {
             id: Date.now(),
@@ -32,7 +36,7 @@ export const AppProvider = ({ children }) => {
     };
 
     return (
-        <AppContext.Provider value={{ projects, activityLog, addActivity, updateProject }}>
+        <AppContext.Provider value={{ projects, activityLog, addActivity, updateProject, addProject }}>
             {children}
         </AppContext.Provider>
     );

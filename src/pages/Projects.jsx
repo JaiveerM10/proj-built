@@ -7,17 +7,19 @@ import WeeklyUpdateModal from '../components/modals/WeeklyUpdateModal';
 import ChangeOrderModal from '../components/modals/ChangeOrderModal';
 import PhaseExplainerModal from '../components/modals/PhaseExplainerModal';
 
+import NewProjectModal from '../components/modals/NewProjectModal';
+
 const Projects = () => {
     const { projects } = useApp();
     const [selectedProject, setSelectedProject] = useState(null);
-    const [actionModal, setActionModal] = useState(null); // 'weekly', 'change', 'phase'
+    const [actionModal, setActionModal] = useState(null); // 'weekly', 'change', 'phase', 'new'
     const navigate = useNavigate();
 
     return (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 relative">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-white">Active Projects</h1>
-                <button onClick={() => navigate('/ai-tools')} className="btn-primary">+ New Project</button>
+                <button onClick={() => setActionModal('new')} className="btn-primary">+ New Project</button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -130,6 +132,9 @@ const Projects = () => {
                 )}
                 {actionModal === 'phase' && selectedProject && (
                     <PhaseExplainerModal project={selectedProject} onClose={() => setActionModal(null)} />
+                )}
+                {actionModal === 'new' && (
+                    <NewProjectModal onClose={() => setActionModal(null)} />
                 )}
             </AnimatePresence>
         </motion.div>
