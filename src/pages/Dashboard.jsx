@@ -28,7 +28,7 @@ const Dashboard = () => {
         >
             <div className="flex items-end justify-between">
                 <div>
-                    <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+                    <h1 className="text-4xl font-bold text-gradient">
                         Mission Control
                     </h1>
                     <p className="text-slate-400 mt-2">Welcome back, Alex. System operating at 98% efficiency.</p>
